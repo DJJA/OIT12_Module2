@@ -1,6 +1,6 @@
 void demoMode(){
   static unsigned long timeLastColorChange = 1000;  // 1000 ms so the led is not turned off when the program starts
-  static byte iCurColor = 0;
+  static byte iCurColor = 0;                        // Used to indicate what the current color is
 
   unsigned long curMillis = millis();
   

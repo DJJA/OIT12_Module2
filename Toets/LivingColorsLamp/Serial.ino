@@ -18,6 +18,27 @@ void readSerial(){
         mBuffer = mBuffer.substring(procent+1);                       // Remove the copied message from the buffer
         handleMessage(message);
       }
-      Serial.println(mBuffer);
+  }
+}
+
+void sendRGBValues(){                 // Send the current led values to the computer if they've changed
+  if(mRedChanged){
+    mRedChanged = false;
+    Serial.print("#RED_STATUS:");
+    Serial.print(mRedValue);
+    Serial.println("%");
+  }
+  if(mGreenChanged){
+    //Serial.println(mGreenChanged);
+    mGreenChanged = false;
+    Serial.print("#GREEN_STATUS:");
+    Serial.print(mGreenValue);
+    Serial.println("%");
+  }
+  if(mBlueChanged){
+    mBlueChanged = false;
+    Serial.print("#BLUE_STATUS:");
+    Serial.print(mBlueValue);
+    Serial.println("%");
   }
 }

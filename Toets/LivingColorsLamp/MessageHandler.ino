@@ -1,27 +1,26 @@
 void handleMessage(String message){
-  Serial.print("This is the message: ");
-  Serial.println(message);  
-
   message.toLowerCase();
 
   int iDoubleColon = message.indexOf(':');
 
   
-  if(iDoubleColon == -1){
+  if(iDoubleColon == -1){                                 // Check if parameter is present
     
-    if(message == "remote_mode")
-      digitalWrite(mPinLedRemote, HIGH);
-      mCurrentMode = remote;
-      
+  if(mCurrentMode != remote &&message == "remote_control")
+      enterRemoteMode();                                 // Enter remote mode
   }else{
    
-    String parameter = message.substring(iDoubleColon+1);
-    message = message.substring(0, iDoubleColon);
-    //Serial.print("parameter: ");
-    //Serial.println(parameter);
-    
-    if(message == "dimled"){
-      //analogWrite(mPinLed, parameter.toInt());
+    String parameter = message.substring(iDoubleColon+1); // Get parameter
+    message = message.substring(0, iDoubleColon);         // Cut message from string
+
+    if(mCurrentMode == remote){                           // Messages only for remote mode
+      if(message == "set_red"){                           // SET_RED
+        setRed(parameter.toInt());
+      }else if(message == "set_green"){                   // SET_GREEN
+        setGreen(parameter.toInt());
+      }else if(message == "set_blue"){                    // SET_BLUE
+        setBlue(parameter.toInt());    
+      }
     }
     
   }

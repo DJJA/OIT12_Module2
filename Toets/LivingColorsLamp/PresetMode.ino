@@ -7,15 +7,16 @@ void presetMode(){
       led = 0;
   }
 
-  switch(led){                  // Is this bad, writing color when it's not changing?
+  switch(led){
       case 0:
-        setColor(255,255,0);
+        showYellow();
         break;
       case 1:
-        setColor(0,255,255);
+        showCyan();
         break;
       case 2:
-        setColor(255,0,255);
+        showMagenta();
+        break;
      }
 }
 

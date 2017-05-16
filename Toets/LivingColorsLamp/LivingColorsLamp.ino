@@ -1,6 +1,6 @@
 #include <Button.h>
 
-enum mode{
+enum mode{    // All the different modes available
   demo,
   preset,
   mix,
@@ -9,10 +9,13 @@ enum mode{
 
 const int mPinSwitchPreset = 6, mPinSwitchMix = 7, mPinPot = A0, mPinLedRed = 9, mPinLedGreen = 10, mPinLedBlue = 11, mPinLedRemote = 8;
 
-Button mBtnPresetMode = Button();
-Button mBtnMixMode = Button();
+Button mBtnPresetMode = Button();   // Instantiate preset button
+Button mBtnMixMode = Button();      // Instantiate mix button
 
-mode mCurrentMode = demo;
+int mRedValue, mGreenValue, mBlueValue;                                 // These contain the current values of the rgb colors
+bool mRedChanged = false, mGreenChanged = false, mBlueChanged = false;  // These keep track if the color has changed
+
+mode mCurrentMode = demo;           // This var holds the current mode
 
 void setup() {
   pinMode(mPinSwitchMix, INPUT);
@@ -27,35 +30,33 @@ void setup() {
 }
 
 void loop() {
-  readSerial();
+  readSerial();   // Read messages
 
-  if(mCurrentMode != preset && mBtnPresetMode.IsButtonReleased(mPinSwitchPreset)){
+  if(mCurrentMode != preset && mBtnPresetMode.IsButtonReleased(mPinSwitchPreset)){  // Check if preset button is released
     if(mCurrentMode == remote){
-      digitalWrite(mPinLedRemote, LOW);         // Turn off the led that indicates that remote mode is on
-      Serial.write("ARDUINO_CONTROL");          // Send message to computer
+      exitRemoteMode();
     }
     mCurrentMode = preset;
-    Serial.println("Going to preset mode");
   }
 
-  if(mCurrentMode != mix && mBtnMixMode.IsButtonReleased(mPinSwitchMix)){
+  if(mCurrentMode != mix && mBtnMixMode.IsButtonReleased(mPinSwitchMix)){           // Check if mix button is released
     if(mCurrentMode == remote){
-      digitalWrite(mPinLedRemote, LOW);         // Turn off the led that indicates that remote mode is on
-      Serial.write("ARDUINO_CONTROL");          // Send message to computer
+      exitRemoteMode();
     }
     mCurrentMode = mix;
-    Serial.println("Going to mix mode");
   }
   
-  switch(mCurrentMode){
+  switch(mCurrentMode){                        // Execute the current mode
     case demo:
       demoMode();
       break;
     case preset:
       presetMode();
+      sendRGBValues();
       break;
     case mix:
       mixMode();
+      sendRGBValues();
       break;
   }
 }
